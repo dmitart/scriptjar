@@ -57,19 +57,22 @@ List<GroovyClass> compile(String prefix, File file) {
 }
 
 List<File> getGroovyLibs(List neededJars) {
+    def libs = new File('.')
     if (System.getenv('GROOVY_HOME')) {
-        def libs = new File(System.getenv('GROOVY_HOME'), 'lib')
-        def groovylibs = libs.listFiles().findAll{jar ->
-            neededJars.any{needed -> jar.name =~ needed  }
-        }
-        if (groovylibs) {
-            return groovylibs
-        } else {
-            println "Cann't find Groovy lib in ${libs.absolutePath}, specify it manually as Grab dependency"
-            System.exit(1)
-        }
+        libs = new File(System.getenv('GROOVY_HOME'), 'lib')
+    }else if( new File( System.getProperty("user.home"), '.groovy/grapes' ).exists()){
+        libs = new File(System.getenv('GROOVY_HOME'), 'lib')
     } else {
         println "Cann't find GROOVY_HOME"
+        System.exit(1)
+    }
+    def groovylibs = libs.listFiles().findAll{jar ->
+        neededJars.any{needed -> jar.name =~ needed  }
+    }
+    if (groovylibs) {
+       return groovylibs
+    } else {
+        println "Cann't find Groovy lib in ${libs.absolutePath}, specify it manually as Grab dependency"
         System.exit(1)
     }
 }
