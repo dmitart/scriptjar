@@ -1,7 +1,5 @@
 #!/usr/bin/env groovy
 
-// from https://github.com/dmitart/scriptjar
-
 import groovy.grape.Grape
 import org.codehaus.groovy.control.CompilationUnit
 import org.codehaus.groovy.control.CompilerConfiguration
