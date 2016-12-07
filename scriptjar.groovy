@@ -17,13 +17,20 @@ import static org.codehaus.groovy.control.Phases.CLASS_GENERATION
 List<GroovyClass> compile(String prefix, File file) {
     List<GroovyClass> classes = [] as List<GroovyClass>
 
+    // set up classloader with all the grapes loaded
+    final GroovyClassLoader classLoader = new GroovyClassLoader()
+    classLoader.parseClass(file.text)
+    getSiblingGroovyFiles(file).each {
+      classLoader.parseClass(it.text)
+    }
+    
     // disable groovy grapes - we're resolving these ahead of time
     CompilerConfiguration compilerConfig = new CompilerConfiguration()
     Set disabledTransforms = ['groovy.grape.GrabAnnotationTransformation'] as Set
     compilerConfig.setDisabledGlobalASTTransformations(disabledTransforms)
 
     // compile main class
-    CompilationUnit unit = new CompilationUnit(compilerConfig)
+    CompilationUnit unit = new CompilationUnit(compilerConfig, null, classLoader)
     unit.addSource(SourceUnit.create(prefix, file.text))
     println "${file.name} => ${prefix} (main class)"
     unit.compile(CLASS_GENERATION)
