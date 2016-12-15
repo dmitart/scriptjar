@@ -38,7 +38,7 @@ List<GroovyClass> compile(String prefix, File file) {
 
     // compile groovy files in same folder
     getSiblingGroovyFiles(file).each {
-        CompilationUnit dependentUnit = new CompilationUnit(compilerConfig)
+        CompilationUnit dependentUnit = new CompilationUnit(compilerConfig, null, classLoader)
         def className = it.name.replaceAll(/\.groovy$/, '')
         println "${it.name} => ${className} (lib)"
         dependentUnit.addSource(SourceUnit.create(className, it.text))
