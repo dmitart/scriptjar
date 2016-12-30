@@ -91,7 +91,7 @@ List dependencies(File source) {
       classLoader.parseClass(it.text)
     }
     def files = Grape.resolve([:], Grape.listDependencies(classLoader)).collect{ new JarFile(it.path) }
-    files.addAll(getGroovyLibs([/groovy-\d+.\d+.\d+.jar/]).collect{ new JarFile(it) })
+    files.addAll(getGroovyLibs([/groovy-.*\.jar/]).collect{ new JarFile(it) })
 
     return files
 }
